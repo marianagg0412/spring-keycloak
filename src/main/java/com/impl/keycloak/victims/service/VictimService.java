@@ -39,7 +39,7 @@ public class VictimService {
             caseRepository.findById(dto.getCaseId()).ifPresent(entity::setCaseEntity);
         }
         Victim saved = victimRepository.save(entity);
-        return VictimMapper::toDto(saved);
+        return VictimMapper.toDto(saved);
     }
 
     public Optional<VictimDto> update(Integer id, VictimDto dto) {
@@ -55,7 +55,7 @@ public class VictimService {
                 existing.setCaseEntity(null);
             }
             Victim updated = victimRepository.save(existing);
-            return VictimMapper::toDto(updated);
+            return VictimMapper.toDto(updated);
         });
     }
 
