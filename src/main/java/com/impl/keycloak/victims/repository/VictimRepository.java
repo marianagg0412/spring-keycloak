@@ -1,6 +1,6 @@
-package com.impl.keycloak.repository;
+package com.impl.keycloak.victims.repository;
 
-import com.impl.keycloak.model.Victim;
+import com.impl.keycloak.victims.model.Victim;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

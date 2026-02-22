@@ -1,6 +1,6 @@
-package com.impl.keycloak.repository;
+package com.impl.keycloak.cases.repository;
 
-import com.impl.keycloak.model.CaseEntity;
+import com.impl.keycloak.cases.model.CaseEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

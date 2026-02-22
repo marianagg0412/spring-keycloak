@@ -1,9 +1,9 @@
-package com.impl.keycloak.mapper;
+package com.impl.keycloak.cases.mapper;
 
-import com.impl.keycloak.dto.CaseDto;
-import com.impl.keycloak.dto.VictimDto;
-import com.impl.keycloak.model.CaseEntity;
-import com.impl.keycloak.model.Victim;
+import com.impl.keycloak.cases.dto.CaseDto;
+import com.impl.keycloak.victims.dto.VictimDto;
+import com.impl.keycloak.cases.model.CaseEntity;
+import com.impl.keycloak.victims.model.Victim;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -14,7 +14,7 @@ public class CaseMapper {
         if (entity == null) return null;
         List<VictimDto> victims = null;
         if (entity.getVictims() != null) {
-            victims = entity.getVictims().stream().map(VictimMapper::toDto).collect(Collectors.toList());
+            victims = entity.getVictims().stream().map(com.impl.keycloak.victims.mapper.VictimMapper::toDto).collect(Collectors.toList());
         }
         return CaseDto.builder()
                 .caseId(entity.getCaseId())
@@ -38,7 +38,7 @@ public class CaseMapper {
                 .detectiveName(dto.getDetectiveName())
                 .build();
         if (dto.getVictims() != null) {
-            List<Victim> victims = dto.getVictims().stream().map(VictimMapper::toEntity).collect(Collectors.toList());
+            List<Victim> victims = dto.getVictims().stream().map(com.impl.keycloak.victims.mapper.VictimMapper::toEntity).collect(Collectors.toList());
             victims.forEach(v -> v.setCaseEntity(entity));
             entity.setVictims(victims);
         }

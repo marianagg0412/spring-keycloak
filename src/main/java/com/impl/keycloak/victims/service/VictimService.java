@@ -1,11 +1,11 @@
-package com.impl.keycloak.service;
+package com.impl.keycloak.victims.service;
 
-import com.impl.keycloak.dto.VictimDto;
-import com.impl.keycloak.mapper.VictimMapper;
-import com.impl.keycloak.model.CaseEntity;
-import com.impl.keycloak.model.Victim;
-import com.impl.keycloak.repository.CaseRepository;
-import com.impl.keycloak.repository.VictimRepository;
+import com.impl.keycloak.victims.dto.VictimDto;
+import com.impl.keycloak.victims.mapper.VictimMapper;
+import com.impl.keycloak.cases.model.CaseEntity;
+import com.impl.keycloak.victims.model.Victim;
+import com.impl.keycloak.cases.repository.CaseRepository;
+import com.impl.keycloak.victims.repository.VictimRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
@@ -39,7 +39,7 @@ public class VictimService {
             caseRepository.findById(dto.getCaseId()).ifPresent(entity::setCaseEntity);
         }
         Victim saved = victimRepository.save(entity);
-        return VictimMapper.toDto(saved);
+        return VictimMapper::toDto(saved);
     }
 
     public Optional<VictimDto> update(Integer id, VictimDto dto) {
@@ -55,7 +55,7 @@ public class VictimService {
                 existing.setCaseEntity(null);
             }
             Victim updated = victimRepository.save(existing);
-            return VictimMapper.toDto(updated);
+            return VictimMapper::toDto(updated);
         });
     }
 

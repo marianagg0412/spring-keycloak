@@ -1,7 +1,7 @@
-package com.impl.keycloak.controller;
+package com.impl.keycloak.cases.controller;
 
-import com.impl.keycloak.dto.CaseDto;
-import com.impl.keycloak.service.CaseService;
+import com.impl.keycloak.cases.dto.CaseDto;
+import com.impl.keycloak.cases.service.CaseService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

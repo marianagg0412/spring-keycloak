@@ -1,8 +1,8 @@
-package com.impl.keycloak.mapper;
+package com.impl.keycloak.victims.mapper;
 
-import com.impl.keycloak.dto.VictimDto;
-import com.impl.keycloak.model.CaseEntity;
-import com.impl.keycloak.model.Victim;
+import com.impl.keycloak.victims.dto.VictimDto;
+import com.impl.keycloak.cases.model.CaseEntity;
+import com.impl.keycloak.victims.model.Victim;
 
 public class VictimMapper {
 

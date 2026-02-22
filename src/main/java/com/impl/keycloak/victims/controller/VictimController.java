@@ -1,7 +1,7 @@
-package com.impl.keycloak.controller;
+package com.impl.keycloak.victims.controller;
 
-import com.impl.keycloak.dto.VictimDto;
-import com.impl.keycloak.service.VictimService;
+import com.impl.keycloak.victims.dto.VictimDto;
+import com.impl.keycloak.victims.service.VictimService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

@@ -1,9 +1,9 @@
-package com.impl.keycloak.service;
+package com.impl.keycloak.cases.service;
 
-import com.impl.keycloak.dto.CaseDto;
-import com.impl.keycloak.mapper.CaseMapper;
-import com.impl.keycloak.model.CaseEntity;
-import com.impl.keycloak.repository.CaseRepository;
+import com.impl.keycloak.cases.dto.CaseDto;
+import com.impl.keycloak.cases.mapper.CaseMapper;
+import com.impl.keycloak.cases.model.CaseEntity;
+import com.impl.keycloak.cases.repository.CaseRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 

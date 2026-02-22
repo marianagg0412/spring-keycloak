@@ -1,4 +1,4 @@
-package com.impl.keycloak.dto;
+package com.impl.keycloak.victims.dto;
 
 import lombok.*;
 

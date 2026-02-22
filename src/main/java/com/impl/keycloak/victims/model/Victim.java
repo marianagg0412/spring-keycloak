@@ -1,4 +1,4 @@
-package com.impl.keycloak.model;
+package com.impl.keycloak.victims.model;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -32,6 +32,6 @@ public class Victim {
     @JoinColumn(name = "case_id")
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
-    private CaseEntity caseEntity;
+    private com.impl.keycloak.cases.model.CaseEntity caseEntity;
 
 }

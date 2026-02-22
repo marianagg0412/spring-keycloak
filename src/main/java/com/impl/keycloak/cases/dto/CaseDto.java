@@ -1,4 +1,4 @@
-package com.impl.keycloak.dto;
+package com.impl.keycloak.cases.dto;
 
 import lombok.*;
 
@@ -16,5 +16,5 @@ public class CaseDto {
     private LocalDateTime investigationStartDate;
     private String investigationStatus;
     private String detectiveName;
-    private List<VictimDto> victims;
+    private List<com.impl.keycloak.victims.dto.VictimDto> victims;
 }
