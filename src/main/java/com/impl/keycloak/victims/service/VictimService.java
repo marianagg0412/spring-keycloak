@@ -2,7 +2,6 @@ package com.impl.keycloak.victims.service;
 
 import com.impl.keycloak.victims.dto.VictimDto;
 import com.impl.keycloak.victims.mapper.VictimMapper;
-import com.impl.keycloak.cases.model.CaseEntity;
 import com.impl.keycloak.victims.model.Victim;
 import com.impl.keycloak.cases.repository.CaseRepository;
 import com.impl.keycloak.victims.repository.VictimRepository;
