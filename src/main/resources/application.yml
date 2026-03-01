@@ -29,6 +29,13 @@ spring:
       mode: always
       continue-on-error: false
 
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: ${KEYCLOAK_JWK_URI}
+          issuer-uri: ${KEYCLOAK_ISSUER_URI}
+
 logging:
   level:
     org.hibernate.SQL: debug
