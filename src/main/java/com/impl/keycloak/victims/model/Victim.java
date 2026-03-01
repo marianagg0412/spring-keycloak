@@ -18,8 +18,10 @@ public class Victim {
     @Column(name = "victim_id")
     private Integer victimId;
 
+    @Column(nullable = true)
     private String name;
 
+    @Column(nullable = true)
     private String surname;
 
     private LocalDateTime dateOfDeath;
@@ -29,7 +31,7 @@ public class Victim {
     private String socialStatus;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "case_id")
+    @JoinColumn(name = "case_id", nullable = false)
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     private com.impl.keycloak.cases.model.CaseEntity caseEntity;
