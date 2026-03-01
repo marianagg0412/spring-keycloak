@@ -8,173 +8,217 @@ In the opulent city of "Las Cariñosas," a series of crimes has shaken high soci
 
 The victims, all from wealthy lineages, share a sinister pattern: they are murdered in their opulent homes at the exact moment their seemingly perfect lives collapse. The bodies are arranged in macabre displays following a mysterious order known only to the killer. The names of the victims—the Aris, the Gonzagas, the Bonet—resonate with a somber echo through the city's history.
 
-- S.A: Found in his study, her body hanging from the ceiling with golden ropes, recalling the luxury that once adorned his life.
-- MG: Discovered in her luxurious bathroom alongside compromising photos of her lover, with her body submerged in a bathtub full of gold coins.
-- Isis the professor: Found on a luxury yacht in "Cuba Lagoon" with Eclipse open, contemplating how to torture Data Structures students and create plain text files.
+- **S.A:** Found in his study, her body hanging from the ceiling with golden ropes, recalling the luxury that once adorned his life.
+- **MG:** Discovered in her luxurious bathroom alongside compromising photos of her lover, with her body submerged in a bathtub full of gold coins.
+- **Isis the professor:** Found on a luxury yacht in "Cuba Lagoon" with Eclipse open, contemplating how to torture Data Structures students and create plain text files.
 
 ## The Investigation
 
 The case rests on the shoulders of Detective Luis R, a man haunted by his own demons (some believe he is the killer, and he also happens to study Administrative Engineering). As he struggles to unravel the enigma, he discovers a web of secrets, lies, and greed intertwined in the heart of the city.
 
-## Assignment & Technical Requirements
+---
 
-The company "Luna Lunera y Asociados S.A." and its leaders, Juan Pablo and Díaz L, require a system with the following specifications:
+## Technical Requirements
 
-1. Framework Flexibility & Restrictions
-   - You may use any framework of your choice (e.g., NestJS, Spring Boot, FastAPI, Go Fiber).
-   - The use of Express.js is strictly forbidden.
+The company **"Luna Lunera y Asociados S.A."** and its leaders, **Juan Pablo and Díaz L**, require a system with the following specifications:
 
-2. Frontend (GUI)
-   - A Web-based Graphical User Interface is mandatory.
-   - Any frontend framework may be used (React, Angular, Vue, or Vanilla JS).
+1. **Framework Flexibility & Restrictions** — Any framework except Express.js (Spring Boot used here).
+2. **Frontend (GUI)** — A Web-based Graphical User Interface is mandatory.
+3. **Security** — Keycloak manages authentication and authorization.
+4. **Containerization** — Full Docker Compose orchestration.
+5. **Design Artifacts** — ERD and Class Diagram in `design/`.
 
-3. Security
-   - Implement Keycloak to manage authentication and authorization to protect sensitive investigation data.
+---
 
-4. Containerization
-   - Both the application and the database must be Dockerized.
-   - Provide a `docker-compose.yml` to orchestrate the environment.
+## API Endpoints
 
-5. Design Artifacts
-   - Deliver the Entity-Relationship Diagram (ERD) and the Class Diagram of the application.
+### Cases — `/api/cases`
 
+| Method | Endpoint | Roles Allowed | Description |
+|--------|----------|---------------|-------------|
+| GET | `/api/cases` | ADMIN, DETECTIVE, VIEWER | List all cases |
+| GET | `/api/cases/{id}` | ADMIN, DETECTIVE, VIEWER | Get case by ID |
+| POST | `/api/cases` | ADMIN, DETECTIVE | Create new case |
+| PUT | `/api/cases/{id}` | ADMIN, DETECTIVE | Update case |
+| DELETE | `/api/cases/{id}` | ADMIN | Delete case |
 
-## Project Status (current repository)
+### Victims — `/api/victims`
 
-This repository currently contains a Spring Boot backend with two main domains: `cases` and `victims`.
+| Method | Endpoint | Roles Allowed | Description |
+|--------|----------|---------------|-------------|
+| GET | `/api/victims` | ADMIN, DETECTIVE, VIEWER | List all victims |
+| GET | `/api/victims/{id}` | ADMIN, DETECTIVE, VIEWER | Get victim by ID |
+| POST | `/api/victims` | ADMIN, DETECTIVE | Register new victim |
+| PUT | `/api/victims/{id}` | ADMIN, DETECTIVE | Update victim info |
+| DELETE | `/api/victims/{id}` | ADMIN | Delete victim record |
 
-- Endpoints implemented (controllers):
-  - `GET /api/cases` — list cases
-  - `GET /api/cases/{id}` — get case by id
-  - `POST /api/cases` — create case
-  - `PUT /api/cases/{id}` — update case
-  - `DELETE /api/cases/{id}` — delete case
+### Evidences — `/api/evidences`
 
-  - `GET /api/victims` — list victims
-  - `GET /api/victims/{id}` — get victim by id
-  - `POST /api/victims` — create victim
-  - `PUT /api/victims/{id}` — update victim
-  - `DELETE /api/victims/{id}` — delete victim
+| Method | Endpoint | Roles Allowed | Description |
+|--------|----------|---------------|-------------|
+| GET | `/api/evidences` | ADMIN, DETECTIVE, VIEWER | List all evidences |
+| GET | `/api/evidences/{id}` | ADMIN, DETECTIVE, VIEWER | Get evidence by ID |
+| POST | `/api/evidences` | ADMIN, DETECTIVE | Register new evidence |
+| PUT | `/api/evidences/{id}` | ADMIN, DETECTIVE | Update evidence |
+| DELETE | `/api/evidences/{id}` | ADMIN | Delete evidence |
 
-- DTOs: `CaseDto`, `VictimDto` (see `src/main/java/com/impl/keycloak/*`)
-- Note: Spring Security / Keycloak dependencies were previously present in `pom.xml` but were removed temporarily to ease local testing. Security must be (re)enabled to satisfy the assignment.
-- There is a `docker-compose.yml` in the repo root; review and adapt it to include Keycloak and the database as required.
+---
 
+## Running with Docker Compose
 
-## How to run (local development)
+### Prerequisites
 
-1. Build and run with Maven:
+- [Docker](https://docs.docker.com/get-docker/) installed
+- [Docker Compose](https://docs.docker.com/compose/install/) installed
+- A `.env` file in the project root (see below)
+
+### 1. Create the `.env` file
+
+Create a file named `.env` in the project root with the following content:
+
+```properties
+POSTGRES_USER=postgres
+POSTGRES_PASSWORD=mysecretpassword
+POSTGRES_DB=investigation_db
+KEYCLOAK_ADMIN=admin
+KEYCLOAK_ADMIN_PASSWORD=admin
+KC_DB=postgres
+KC_DB_URL=jdbc:postgresql://postgres:5432/investigation_db
+SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/investigation_db
+SPRING_DATASOURCE_USERNAME=postgres
+SPRING_DATASOURCE_PASSWORD=mysecretpassword
+KEYCLOAK_ISSUER_URI=http://localhost:8081/realms/spring
+KEYCLOAK_JWK_URI=http://keycloak:8080/realms/spring/protocol/openid-connect/certs
+```
+
+### 2. Build and start all services
 
 ```bash
-# from project root
-./mvnw clean package
-java -jar target/keycloak-0.0.1-SNAPSHOT.jar
+docker compose up --build -d
 ```
 
-or during development:
+This will start three containers: `postgres_db`, `keycloak`, and `keycloak_app`.
+
+### 3. Verify the services are running
 
 ```bash
-./mvnw spring-boot:run
+docker compose ps
 ```
 
-2. Open the API
+All three services should show status `running` or `healthy`.
 
-- Base URL: `http://localhost:8080`
-- Example endpoint: `GET http://localhost:8080/api/cases`
+### 4. Check logs
 
-3. Docker (recommended for full stack with DB and Keycloak)
+```bash
+# All services
+docker compose logs -f
 
-- Ensure `docker` and `docker-compose` are installed.
-- Update or create `docker-compose.yml` to include:
-  - The Spring Boot application service
-  - Postgres database service
-  - Keycloak service (or use a dedicated Keycloak container)
+# Only the Spring Boot app
+docker compose logs -f app
 
-Example (high level):
-
-```yaml
-version: '3.8'
-services:
-  app:
-    build: .
-    ports:
-      - 8080:8080
-    depends_on:
-      - db
-      - keycloak
-  db:
-    image: postgres:14
-    environment:
-      POSTGRES_DB: investigation_db
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-  keycloak:
-    image: quay.io/keycloak/keycloak:21.1.1
-    environment:
-      KEYCLOAK_ADMIN: admin
-      KEYCLOAK_ADMIN_PASSWORD: admin
-      # configure realm, admin user, etc.
-    ports:
-      - 8081:8080
+# Only Keycloak
+docker compose logs -f keycloak
 ```
 
-Adjust as needed and ensure the application `application.yml` references the Keycloak issuer or JWK URI for resource-server validation.
+### 5. Access the services
 
+| Service | URL |
+|---------|-----|
+| Spring Boot API | http://localhost:8080 |
+| Keycloak Admin Console | http://localhost:8081 |
 
-## Security: re-enabling Keycloak (high-level steps)
+### 6. Stop all services
 
-1. Add back the following dependencies to `pom.xml`:
-   - `spring-boot-starter-security`
-   - `spring-boot-starter-security-oauth2-resource-server`
-
-2. Configure `application.yml` with Keycloak issuer or `jwk-set-uri`:
-
-```yaml
-spring:
-  security:
-    oauth2:
-      resourceserver:
-        jwt:
-          issuer-uri: https://<KEYCLOAK_HOST>/realms/<REALM>
+```bash
+docker compose down
 ```
 
-3. Optionally add a `SecurityConfig` to tune which endpoints are public and which require authentication.
+To also remove the database volume (full reset):
 
-4. Start Keycloak, create a realm, clients/users, then obtain an access token and call the API with `Authorization: Bearer <token>`.
-
-
-## Design Artifacts
-
-Place ERD and Class Diagram files in a directory `design/` at the repo root. Preferred formats: PNG, SVG, or the native diagram format (e.g. draw.io `.drawio`). Example files to add:
-
-- `design/ERD.png` — Entity-Relationship Diagram
-- `design/ClassDiagram.png` — Class Diagram
-
-If you want, I can create initial diagram files from the current entities and classes and add them to the repo.
-
-
-## Deliverables
-
-- Working backend with Cases & Victims API (this repo)
-- Keycloak configuration (to be added or enabled)
-- Docker Compose for app + DB + Keycloak (update `docker-compose.yml`)
-- Frontend GUI (not included yet) — create a `frontend/` directory and add code
-- Design artifacts in `design/`
-
-
-## Next steps / Recommendations
-
-- Re-enable Keycloak and secure endpoints per requirement #3.
-- Dockerize Keycloak and the database, update `docker-compose.yml`, and verify all services start and the app can validate tokens.
-- Create a minimal frontend that lists cases and victims and supports CRUD operations. Protect edit/create routes behind Keycloak authentication.
-- Add ERD and Class Diagram in `design/`.
-- Create a Postman collection for API testing (I can generate and add it).
-
-
-## Contact / Authors
-- Project: Luna Lunera y Asociados S.A. — Investigation System (student project)
-- Maintainer: repo owner
+```bash
+docker compose down -v
+```
 
 
 ---
-*This README was generated to document the assignment, current repo status, and next steps to finish the task.*
+
+## Keycloak Configuration Guide
+
+### 1. Access the Admin Console
+
+Once the Docker Compose stack is running, open your browser at:
+
+```
+http://localhost:8081
+```
+
+Log in with the admin credentials defined in your `.env` file (`KEYCLOAK_ADMIN` / `KEYCLOAK_ADMIN_PASSWORD`).
+
+### 2. Create a Realm
+
+1. Click the dropdown in the top-left corner (shows "master").
+2. Click **Create Realm**.
+3. Set the name to `spring` and click **Create**.
+
+### 3. Create the Client
+
+1. In the left menu go to **Clients** → **Create client**.
+2. Fill in the fields:
+   - **Client ID:** `springboot_client`
+   - **Client type:** `OpenID Connect`
+3. Click **Next**.
+4. In the **Capability config** step, apply the following settings:
+   - **Client authentication:** `Off`
+   - **Authorization:** `Off`
+   - **Authentication flow:** check only `Standard flow` and `Direct access grants`
+5. Click **Next** → **Save**.
+
+### 4. Create Roles
+
+1. In the left menu go to **Clients** → `springboot_client` → **Roles** tab.
+2. Click **Create role** and add the following roles one by one:
+
+| Role | Description |
+|------|-------------|
+| `ADMIN` | Full access: read, write, and delete |
+| `DETECTIVE` | Can read and write, but cannot delete |
+| `VIEWER` | Read-only access |
+
+### 5. Create Users and Assign Roles
+
+1. In the left menu go to **Users** → **Create new user**.
+2. Fill in the **Username** and click **Create**.
+3. Go to the **Credentials** tab → **Set password** (disable "Temporary").
+4. Go to the **Role mapping** tab → **Assign role**.
+5. Filter by **Filter by clients**, select `springboot_client`, and assign the desired role.
+
+### 6. Obtain an Access Token (Postman)
+
+Make a **POST** request to:
+
+```
+http://localhost:8081/realms/spring/protocol/openid-connect/token
+```
+
+In the **Body** tab, select `x-www-form-urlencoded` and add the following fields:
+
+| Key | Value |
+|-----|-------|
+| `grant_type` | `password` |
+| `client_id` | `springboot_client` |
+| `username` | `<your user>` |
+| `password` | `<your password>` |
+
+The response will include an `access_token`. Use it in your requests as:
+
+```
+Authorization: Bearer <access_token>
+```
+
+---
+
+
+## Contact / Authors
+
+- Project: Luna Lunera y Asociados S.A. — Investigation System (student project)
+- Maintainer: repo owner
