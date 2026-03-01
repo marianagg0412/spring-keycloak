@@ -1,5 +1,6 @@
 package com.impl.keycloak.victims.service;
 
+import com.impl.keycloak.common.exception.ResourceNotFoundException;
 import com.impl.keycloak.victims.dto.VictimDto;
 import com.impl.keycloak.victims.mapper.VictimMapper;
 import com.impl.keycloak.victims.model.Victim;
@@ -29,36 +30,48 @@ public class VictimService {
     }
 
     public Optional<VictimDto> findById(Integer id) {
-        return victimRepository.findById(id).map(VictimMapper::toDto);
+        return Optional.of(victimRepository.findById(id)
+                .map(VictimMapper::toDto)
+                .orElseThrow(() -> new ResourceNotFoundException("Victim not found with id: " + id)));
     }
 
     public VictimDto create(VictimDto dto) {
         Victim entity = VictimMapper.toEntity(dto);
         if (dto.getCaseId() != null) {
-            caseRepository.findById(dto.getCaseId()).ifPresent(entity::setCaseEntity);
+            entity.setCaseEntity(
+                    caseRepository.findById(dto.getCaseId())
+                            .orElseThrow(() -> new ResourceNotFoundException("Case not found with id: " + dto.getCaseId()))
+            );
         }
-        Victim saved = victimRepository.save(entity);
-        return VictimMapper.toDto(saved);
+        return VictimMapper.toDto(victimRepository.save(entity));
     }
 
     public Optional<VictimDto> update(Integer id, VictimDto dto) {
-        return victimRepository.findById(id).map(existing -> {
-            existing.setName(dto.getName());
-            existing.setSurname(dto.getSurname());
-            existing.setDateOfDeath(dto.getDateOfDeath());
-            existing.setCauseOfDeath(dto.getCauseOfDeath());
-            existing.setSocialStatus(dto.getSocialStatus());
-            if (dto.getCaseId() != null) {
-                caseRepository.findById(dto.getCaseId()).ifPresent(existing::setCaseEntity);
-            } else {
-                existing.setCaseEntity(null);
-            }
-            Victim updated = victimRepository.save(existing);
-            return VictimMapper.toDto(updated);
-        });
+        Victim existing = victimRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Victim not found with id: " + id));
+
+        existing.setName(dto.getName());
+        existing.setSurname(dto.getSurname());
+        existing.setDateOfDeath(dto.getDateOfDeath());
+        existing.setCauseOfDeath(dto.getCauseOfDeath());
+        existing.setSocialStatus(dto.getSocialStatus());
+
+        if (dto.getCaseId() != null) {
+            existing.setCaseEntity(
+                    caseRepository.findById(dto.getCaseId())
+                            .orElseThrow(() -> new ResourceNotFoundException("Case not found with id: " + dto.getCaseId()))
+            );
+        } else {
+            existing.setCaseEntity(null);
+        }
+
+        return Optional.of(VictimMapper.toDto(victimRepository.save(existing)));
     }
 
     public void delete(Integer id) {
+        if (!victimRepository.existsById(id)) {
+            throw new ResourceNotFoundException("Victim not found with id: " + id);
+        }
         victimRepository.deleteById(id);
     }
 }

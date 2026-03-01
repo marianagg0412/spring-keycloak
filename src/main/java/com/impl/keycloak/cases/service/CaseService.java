@@ -4,6 +4,7 @@ import com.impl.keycloak.cases.dto.CaseDto;
 import com.impl.keycloak.cases.mapper.CaseMapper;
 import com.impl.keycloak.cases.model.CaseEntity;
 import com.impl.keycloak.cases.repository.CaseRepository;
+import com.impl.keycloak.common.exception.ResourceNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
@@ -26,7 +27,9 @@ public class CaseService {
     }
 
     public Optional<CaseDto> findById(Integer id) {
-        return caseRepository.findById(id).map(CaseMapper::toDto);
+        return Optional.of(caseRepository.findById(id)
+                .map(CaseMapper::toDto)
+                .orElseThrow(() -> new ResourceNotFoundException("Case not found with id: " + id)));
     }
 
     public CaseDto create(CaseDto dto) {
@@ -36,18 +39,22 @@ public class CaseService {
     }
 
     public Optional<CaseDto> update(Integer id, CaseDto dto) {
-        return caseRepository.findById(id).map(existing -> {
-            existing.setTitle(dto.getTitle());
-            existing.setDescription(dto.getDescription());
-            existing.setInvestigationStartDate(dto.getInvestigationStartDate());
-            existing.setInvestigationStatus(dto.getInvestigationStatus());
-            existing.setDetectiveName(dto.getDetectiveName());
-            CaseEntity updated = caseRepository.save(existing);
-            return CaseMapper.toDto(updated);
-        });
+        CaseEntity existing = caseRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Case not found with id: " + id));
+
+        existing.setTitle(dto.getTitle());
+        existing.setDescription(dto.getDescription());
+        existing.setInvestigationStartDate(dto.getInvestigationStartDate());
+        existing.setInvestigationStatus(dto.getInvestigationStatus());
+        existing.setDetectiveName(dto.getDetectiveName());
+
+        return Optional.of(CaseMapper.toDto(caseRepository.save(existing)));
     }
 
     public void delete(Integer id) {
+        if (!caseRepository.existsById(id)) {
+            throw new ResourceNotFoundException("Case not found with id: " + id);
+        }
         caseRepository.deleteById(id);
     }
 }
